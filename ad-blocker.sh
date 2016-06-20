@@ -40,12 +40,12 @@ cd ${ZoneDataDir}
    fi
 
 # Download the "blacklist" from "http://pgl.yoyo.org"
-   wget "http://pgl.yoyo.org/as/serverlist.php?hostformat=bindconfig&showintro=0&mimetype=plaintext"
+   wget "https://raw.githubusercontent.com/JanChristiansen/ad-blocker.sh/master/dnsconfig -O temp_dnslist"
 
 # Modify Zone file path from "null.zone.file" to "/etc/zone/master/null.zone.file" in order to comply with Synology bind implementation
    rm -f ad-blocker.new
-   sed -e 's/null.zone.file/\/etc\/zone\/master\/null.zone.file/g' "serverlist.php?hostformat=bindconfig&showintro=0&mimetype=plaintext" > ad-blocker.new
-   rm "serverlist.php?hostformat=bindconfig&showintro=0&mimetype=plaintext"
+   sed -e 's/null.zone.file/\/etc\/zone\/master\/null.zone.file/g' "temp_dnslist" > ad-blocker.new
+   rm "temp_dnslist"
    chown -R nobody:nobody ad-blocker.new
    if [ -f ad-blocker.new ] ; then
       rm -f ad-blocker.db
