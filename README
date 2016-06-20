@@ -1,0 +1,30 @@
+Description:
+
+The script was developed on DSM 4.3, all the required paths are defined in the beginning.
+Except for the "null.zone.file" non-transferable master zone manual creation (in the DSM GUI) it doesn't require anything else. Everything (data download/update, zone configuration adjustment and dnsserver config reload) is handled in the script. Lunch it how many times you want.
+The ad-blocker can be applied to various devices through the views. Zone addition/change (except for the null.zone.file) doesn't corrupt its configuration. I suggest scheduling it once a week.
+
+Implementation:
+
+    DNS-Server config:
+        With the GUI create a new master forward zone
+            Domain type: "Forward Zone"
+            Domain name: "null.zone.file"
+            Serial format: "Date (YYYYMMDDNN)"
+        Enable resolution services (if not already done)
+        Properly setup forwarders (if you wish, you can even control them with views)
+    Console operations:
+        Logon to the nas through telnet/ssh
+        Copy the below script to: /var/packages/DNSServer/target/script/ad-blocker.sh
+        Give it execute permissions
+          chmod +x /var/packages/DNSServer/target/script/ad-blocker.sh
+        Run it and/or schedule it [control panel / task scheduler - user:root (suggested once per week)]
+          sh /var/packages/DNSServer/target/script/ad-blocker.sh
+
+
+Edit: 2014.04.06 Updated the script due to a bug-fix
+Edit: 2014.10.04 Tested on DSM5.1beta: everything OK
+Edit: 2015.01.08
+
+    I've noted that specially with chrome sometimes the adds keep coming on the pages even if in the network settings only the first dns is configured with the nas ip address. It seems like the browser performs its own resolution with other dns servers regardless of the netwotk settings.
+    Solution: on all the clients (dhcp servers) setup the nas IP as 1st dns server and eventually the router's IP as 2nd dns server (for backup purposes: if the nas is down the router will act as a dns proxy). Then on the router setup a firewall rule for the outgoing traffic on tcp/udp port 53: deny all source IPs except the NAS private lan one.
